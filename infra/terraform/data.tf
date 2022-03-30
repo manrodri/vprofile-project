@@ -50,3 +50,22 @@ data "template_file" "memcache" {
     hosted_zone_id = aws_route53_zone.private.zone_id
   }
 }
+
+data "template_file" "mysql" {
+  template = file("./templates/userdata/mysql.sh")
+
+  vars = {
+    hosted_zone_id = aws_route53_zone.private.zone_id
+  }
+}
+
+data "template_file" "rabbitMQ" {
+  template = file("./templates/userdata/rabbitMQ_amazon-linux.sh")
+
+  vars = {
+    hosted_zone_id = aws_route53_zone.private.zone_id
+  }
+}
+
+
+
