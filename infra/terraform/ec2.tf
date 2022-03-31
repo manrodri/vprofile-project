@@ -13,7 +13,7 @@ resource "aws_launch_configuration" "rabbitMQ" {
     aws_security_group.backend_servers_sg.id,
   ]
 
-  user_data = file("./templates/userdata/rabbitMQ_amazon-linux.sh")
+  user_data = data.template_file.rabbitMQ.rendered
   associate_public_ip_address = true
 
 }
@@ -33,7 +33,7 @@ resource "aws_launch_configuration" "mysql" {
     aws_security_group.backend_servers_sg.id,
   ]
 
-  user_data = file("./templates/userdata/mysql.sh")
+  user_data = data.template_file.mysql.rendered
   associate_public_ip_address = true
 
 }
@@ -135,53 +135,4 @@ resource "aws_autoscaling_group" "rabbitMQ" {
     }
   }
 }
-
-
-resource "aws_launch_configuration" "deployment" {
-  lifecycle {
-    create_before_destroy = true
-  }
-
-  name_prefix = "${terraform.workspace}-deployment"
-  image_id = data.aws_ami.amazon-2.image_id
-  instance_type = "t3.micro"
-  key_name = var.key
-  iam_instance_profile = aws_iam_instance_profile.asg.name
-
-  security_groups = [
-    aws_security_group.backend_servers_sg.id,aws_security_group.webapp_ssh_inbound_sg.id
-  ]
-
-  user_data = file("./templates/userdata/deploy_instance.sh")
-  associate_public_ip_address = true
-
-
-}
-
-
-resource "aws_autoscaling_group" "deployment_instance" {
-  desired_capacity = 1
-  max_size = 1
-  min_size = 1
-  vpc_zone_identifier = module.vpc.public_subnets
-
-  launch_configuration = aws_launch_configuration.deployment.id
-
-  tag {
-    key                 = "Name"
-    value               = "deployment_instance"
-    propagate_at_launch = true
-  }
-
-  dynamic "tag" {
-    for_each = local.common_tags
-    content {
-      key                 = tag.key
-      value               = tag.value
-      propagate_at_launch = true
-    }
-  }
-}
-
-
 

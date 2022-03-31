@@ -15,7 +15,7 @@ resource "aws_launch_configuration" "appserver" {
     aws_security_group.webapp_https_inbound_sg.id
   ]
 
-  user_data                   = file("./templates/userdata/appserver_ubuntu.sh")
+  user_data                   = data.template_file.tomcat8.rendered
   associate_public_ip_address = true
 }
 
@@ -31,6 +31,12 @@ resource "aws_autoscaling_group" "webapp_asg" {
   wait_for_elb_capacity = var.asg_min_size[terraform.workspace]
   force_delete          = true
   launch_configuration  = aws_launch_configuration.appserver.id
+
+  tag {
+    key                 = "Name"
+    value               = "app-server"
+    propagate_at_launch = true
+  }
 
   dynamic "tag" {
     for_each = local.common_tags

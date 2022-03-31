@@ -68,4 +68,22 @@ data "template_file" "rabbitMQ" {
 }
 
 
+data "template_file" "deployment" {
+  template = file("./templates/userdata/deploy_instance.sh")
+
+  vars = {
+    s3_bucket_name = aws_s3_bucket.example.id
+  }
+}
+
+data "template_file" "tomcat8" {
+  template = file("./templates/userdata/appserver_ubuntu.sh")
+
+  vars = {
+    s3_bucket_name = aws_s3_bucket.example.id
+  }
+}
+
+
+
 
