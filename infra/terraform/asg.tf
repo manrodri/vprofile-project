@@ -10,9 +10,8 @@ resource "aws_launch_configuration" "appserver" {
   iam_instance_profile = aws_iam_instance_profile.asg.name
 
   security_groups = [
-    aws_security_group.webapp_http_inbound_sg.id,
-    aws_security_group.webapp_ssh_inbound_sg.id,
-    aws_security_group.webapp_https_inbound_sg.id
+    aws_security_group.app_server_sg.id,
+    aws_security_group.webapp_ssh_inbound_sg.id
   ]
 
   user_data                   = data.template_file.tomcat8.rendered
@@ -29,6 +28,8 @@ resource "aws_autoscaling_group" "webapp_asg" {
   max_size              = var.asg_max_size[terraform.workspace]
   min_size              = var.asg_min_size[terraform.workspace]
   wait_for_elb_capacity = var.asg_min_size[terraform.workspace]
+  health_check_type = "ELB"
+  target_group_arns = [aws_alb_target_group.webapp_alb_tg.arn]
   force_delete          = true
   launch_configuration  = aws_launch_configuration.appserver.id
 

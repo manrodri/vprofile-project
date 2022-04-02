@@ -123,21 +123,21 @@ resource "aws_security_group" "backend_servers_sg" {
     from_port       = 3306
     to_port         = 3306
     protocol        = "tcp"
-    security_groups = [aws_security_group.app_server_sg.id]
+    cidr_blocks = ["10.0.0.0/8"]
   }
 
   ingress {
     from_port       = 11211
     to_port         = 11211
     protocol        = "tcp"
-    security_groups = [aws_security_group.app_server_sg.id]
+    cidr_blocks = ["10.0.0.0/8"]
   }
 
   ingress {
     from_port       = 5672
     to_port         = 5672
     protocol        = "tcp"
-    security_groups = [aws_security_group.app_server_sg.id]
+    cidr_blocks = ["10.0.0.0/8"]
   }
 
   ingress {
