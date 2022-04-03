@@ -111,3 +111,21 @@ variable "secret_arn" {
   default = "arn:aws:secretsmanager:eu-west-1:423754860743:secret:remoteRepositorieKeys-YCaGMz"
 }
 
+
+####
+# memcache
+#####
+
+variable "memchace_instance_size" {
+  type = string
+  default = "cache.t3.micro"
+}
+
+
+####
+# mq
+####
+
+variable "mq_password" {
+  type = string
+}

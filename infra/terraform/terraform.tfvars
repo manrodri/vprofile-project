@@ -94,3 +94,7 @@ rds_instance_size =  "db.t3.micro"
 
 rds_multi_az = false
 
+
+
+mq_password = "MindTheGapPlease"
+
