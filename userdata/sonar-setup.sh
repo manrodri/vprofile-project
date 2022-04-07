@@ -6,6 +6,7 @@ fs.file-max=65536
 ulimit -n 65536
 ulimit -u 4096
 EOT
+
 cp /etc/security/limits.conf /root/sec_limit.conf_backup
 cat <<EOT> /etc/security/limits.conf
 sonarqube   -   nofile   65536
